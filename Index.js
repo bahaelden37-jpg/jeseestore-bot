@@ -1,0 +1,9 @@
+{
+  "name": "jesee-store-bot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "telegraf": "^4.12.0",
+    "express": "^4.18.2"
+  }
+}
