@@ -1,16 +1,16 @@
 const { Telegraf, Markup } = require('telegraf');
 const http = require('http');
 
-// Updated Bot Token
+// Bot Token
 const bot = new Telegraf('8692737754:AAGW7-qFJSSKDR87K2n52InE6pRWLXjEulM');
 
 // Admin IDs
 const ADMINS = ['7149506332', '8549868909'];
 
-// Function to notify admins
+// Notification function
 const sendToAdmins = (text) => {
     ADMINS.forEach(id => {
-        bot.telegram.sendMessage(id, text).catch(e => console.log("Admin Notification Failed"));
+        bot.telegram.sendMessage(id, text).catch(e => console.log("Notify Error"));
     });
 };
 
@@ -18,8 +18,7 @@ bot.telegram.deleteWebhook().then(() => {
 
     // Main Menu
     bot.start((ctx) => {
-        const welcomeText = "Welcome to jesee.store 🌟\nPlease select a service:";
-        ctx.reply(welcomeText, 
+        ctx.reply("Welcome to jesee.store 🌟\nSelect a category:", 
             Markup.inlineKeyboard([
                 [Markup.button.callback('🎮 Games Top-up', 'menu_games')],
                 [Markup.button.callback('📺 TV Apps', 'menu_tv')],
@@ -37,24 +36,28 @@ bot.telegram.deleteWebhook().then(() => {
     bot.action('menu_salary', (ctx) => {
         ctx.answerCbQuery();
         ctx.reply("💰 Withdrawal Methods:", Markup.inlineKeyboard([
-            [Markup.button.callback('Wish Money 🧧', 'req_wish')],
-            [Markup.button.callback('Sham Cash 💳', 'req_sham')],
-            [Markup.button.callback('Perfect Money 💎', 'req_perfect')],
+            [Markup.button.callback('Wish Money', 'req_wish')],
+            [Markup.button.callback('Sham Cash', 'req_sham')],
+            [Markup.button.callback('Perfect Money', 'req_perfect')],
             [Markup.button.callback('⬅️ Back to Home', 'go_home')]
         ]));
     });
 
-    // Request Logic
+    // Request Handling
     bot.action(/^req_/, (ctx) => {
         const method = ctx.callbackQuery.data.replace('req_', '').toUpperCase();
-        const adminMsg = 📥 *New Order*\n\n👤 User: ${ctx.from.first_name}\n🆔 ID: \${ctx.from.id}\\n🛠 Service: ${method};
+        const userName = ctx.from.first_name || "User";
+        const userId = ctx.from.id;
+        
+        // Simple string joining to avoid Syntax Errors on line 50
+        const adminMsg = "📥 New Order\n\nUser: " + userName + "\nID: " + userId + "\nService: " + method;
         
         sendToAdmins(adminMsg);
         ctx.answerCbQuery();
-        ctx.reply("✅ Your request has been sent! Our team will contact you soon.");
+        ctx.reply("✅ Your request has been sent! We will contact you soon.");
     });
 
-    // Home Navigation
+    // Navigation
     bot.action('go_home', (ctx) => {
         ctx.answerCbQuery();
         ctx.deleteMessage().catch(() => {});
@@ -62,11 +65,11 @@ bot.telegram.deleteWebhook().then(() => {
     });
 
     bot.launch();
-    console.log("Jesee Store Bot is running with the new token...");
+    console.log("Bot status: Running");
 });
 
 // Port binding for Render
 http.createServer((req, res) => {
-    res.write('Bot is Live and Active');
+    res.write('Bot is Active');
     res.end();
 }).listen(process.env.PORT || 8080);
