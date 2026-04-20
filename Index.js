@@ -1,57 +1,51 @@
-const TelegramBot = require('node-telegram-bot-api');
+const { Telegraf, Markup } = require('telegraf');
 
-// Your Token and Admin ID
-const token = '8692737754:AAGW7-qFJSSKDR87K2n52InE6pRWLXjEulM';
-const myChatId = '7149506332'; 
+// التوكن الخاص بك
+const bot = new Telegraf('8692737754:AAGW7-qFJSSKDR87K2n52InE6pRWLXjEulM');
 
-const bot = new TelegramBot(token, { 
-  polling: { params: { offset: -1 } } 
+// معرف حسابك للتنبيهات
+const ADMIN_ID = '7149506332';
+const WEBSITE_URL = 'https://jesee.store/';
+const WHATSAPP_URL = 'https://wa.me/905432572606';
+
+bot.start((ctx) => {
+    const userName = ctx.from.first_name || "عميل";
+    const userUsername = ctx.from.username ? @${ctx.from.username} : "بدون يوزر";
+
+    // تنبيه للأدمن
+    bot.telegram.sendMessage(ADMIN_ID, 
+        🔔 *تنبيه: عميل جديد!*\n\n👤 الاسم: ${userName}\n🆔 اليوزر: ${userUsername}\n🔢 ID: \${ctx.from.id}\``, 
+        { parse_mode: 'Markdown' }
+    ).catch(err => console.log("خطأ في تنبيه الأدمن: ", err));
+
+    // رسالة الترحيب مع أزرار شفافة (Inline Buttons)
+    ctx.replyWithMarkdown(
+        أهلاً بك في متجر *jesee.store* 🌟\n\nنحن هنا لخدمتك، يمكنك اختيار ما يناسبك من الأزرار أدناه:,
+        Markup.inlineKeyboard([
+            [Markup.button.url('🌐 زيارة موقعنا الإلكتروني', WEBSITE_URL)],
+            [Markup.button.url('💬 تواصل عبر واتساب', WHATSAPP_URL)],
+            [Markup.button.callback('💳 طرق الدفع المتاحة', 'payment_methods')]
+        ])
+    );
 });
 
-const whatsappNumber = "905342572605";
-const websiteUrl = "https://jesee.store/"; 
-
-// Admin Notification Function (English for stability)
-function notifyAdmin(action, user) {
-  const adminLog = Admin Alert:\nUser: ${user.first_name}\nID: ${user.id}\nAction: ${action};
-  bot.sendMessage(myChatId, adminLog);
-}
-
-bot.onText(/\/start/, (msg) => {
-  const user = msg.from;
-  notifyAdmin("Started the Bot (New User)", user);
-
-  const options = {
-    reply_markup: {
-      inline_keyboard: [
-        [{ text: '💳 طرق الدفع وسحب الرواتب', callback_data: 'pay_methods' }],
-        [{ text: '🌐 زيارة موقعنا الإلكتروني', url: websiteUrl }],
-        [{ text: '💬 تواصل عبر الواتساب', url: 'https://wa.me/' + whatsappNumber }]
-      ]
-    }
-  };
-  
-  const welcomeText = "أهلاً بك في متجر الجيسي ستور! 🏪🌍\n\nيرجى اختيار القسم المطلوب من الأزرار أدناه:";
-  bot.sendMessage(msg.chat.id, welcomeText, options);
+// معالجة الضغط على زر طرق الدفع
+bot.action('payment_methods', (ctx) => {
+    ctx.replyWithMarkdown(
+        💰 *أبرز طرق الدفع المتوفرة:*\n +
+        • زين كاش العراق\n +
+        • بنك تركيا وكليك الأردن\n +
+        • USDT (العملات الرقمية)\n +
+        • فودافون كاش مصر\n\n +
+        للحصول على التفاصيل كاملة، يرجى التواصل مع الدعم.
+    );
 });
 
-bot.on('callback_query', (query) => {
-  const user = query.from;
+// تشغيل البوت
+bot.launch()
+    .then(() => console.log("✅ البوت يعمل الآن مع أزرار الواتساب والموقع"))
+    .catch((err) => console.error("❌ فشل التشغيل: ", err));
 
-  if (query.data === 'pay_methods') {
-    notifyAdmin("Interested in Payment Methods", user);
-    
-    bot.answerCallbackQuery(query.id, { text: "Loading..." });
-    
-    const paymentInfo = "💰 قائمة طرق الدفع وسحب الرواتب المتاحة:\n\n" +
-                        "• العراق: زين كاش\n" +
-                        "• سوريا: شام كاش، حوالات\n" +
-                        "• تركيا: بنك تركيا\n" +
-                        "• العملات الرقمية: USDT\n\n" +
-                        "📞 للتفاصيل، تواصل معنا عبر الواتساب.";
-                        
-    bot.sendMessage(query.message.chat.id, paymentInfo, { parse_mode: 'Markdown' });
-  }
-});
-
-console.log("Bot is running successfully with stable encoding...");
+// توقف سليم
+process.once('SIGINT', () => bot.stop('SIGINT'));
+process.once('SIGTERM', () => bot.stop('SIGTERM'));
