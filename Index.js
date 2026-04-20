@@ -1,20 +1,26 @@
-const { Telegraf } = require('telegraf');
-const express = require('express');
+const TelegramBot = require('node-telegram-bot-api');
 
-const bot = new Telegraf('8692737754:AAGW7-qFJSSKDR87K2n52InE6pRWLXjEulM');
-const app = express();
+// توكن البوت الخاص بك
+const token = '8692737754:AAGW7-qFJSSKDR87K2n52InE6pRWLXjEulM';
 
-// رد البوت الأساسي
-bot.start((ctx) => ctx.reply('مرحباً بك في بوت الجيسي ستور 💎\nالمتجر متصل الآن عبر Render!'));
-bot.hears('الأسعار', (ctx) => ctx.reply('قائمة أسعار الشحن متوفرة الآن في الموقع..'));
+// رابط الخدمة على ريندر (تأكد أنه الرابط الصحيح)
+const URL = 'https://jeseestore-bot-4.onrender.com';
 
-// إعداد الـ Webhook ليعمل مع Render
-const PORT = process.env.PORT || 3000;
-const URL = process.env.RENDER_EXTERNAL_URL; // Render سيعطيك هذا الرابط تلقائياً
-
-app.use(bot.webhookCallback('/secret-path'));
-
-app.listen(PORT, async () => {
-  await bot.telegram.setWebhook(${URL}/secret-path);
-  console.log(Bot is running on port ${PORT});
+const bot = new TelegramBot(token, {
+  webHook: {
+    port: process.env.PORT || 10000
+  }
 });
+
+// هذه هي الخطوة التي كان فيها الخطأ (تم تصحيح الأقواس هنا)
+bot.setWebHook(${URL}/secret-path);
+
+// رد البوت عند كتابة /start
+bot.onText(/\/start/, (msg) => {
+  const chatId = msg.chat.id;
+  bot.sendMessage(chatId, "أهلاً بك في متجر الجيسي ستور لخدمات الشحن وسحب الرواتب!");
+});
+
+// رد البوت على أي رسالة أخرى
+bot.on('message', (msg) => {
+  if (msg.text
