@@ -10,6 +10,7 @@ const WHATSAPP_URL = 'https://wa.me/905432572606';
 
 bot.start((ctx) => {
     const userName = ctx.from.first_name || "عميل";
+    // تصحيح السطر الذي كان يسبب الخطأ
     const userUsername = ctx.from.username ? @${ctx.from.username} : "بدون يوزر";
 
     // تنبيه للأدمن
@@ -18,7 +19,7 @@ bot.start((ctx) => {
         { parse_mode: 'Markdown' }
     ).catch(err => console.log("خطأ في تنبيه الأدمن: ", err));
 
-    // رسالة الترحيب مع أزرار شفافة (Inline Buttons)
+    // رسالة الترحيب
     ctx.replyWithMarkdown(
         أهلاً بك في متجر *jesee.store* 🌟\n\nنحن هنا لخدمتك، يمكنك اختيار ما يناسبك من الأزرار أدناه:,
         Markup.inlineKeyboard([
@@ -29,23 +30,15 @@ bot.start((ctx) => {
     );
 });
 
-// معالجة الضغط على زر طرق الدفع
 bot.action('payment_methods', (ctx) => {
     ctx.replyWithMarkdown(
-        💰 *أبرز طرق الدفع المتوفرة:*\n +
-        • زين كاش العراق\n +
-        • بنك تركيا وكليك الأردن\n +
-        • USDT (العملات الرقمية)\n +
-        • فودافون كاش مصر\n\n +
-        للحصول على التفاصيل كاملة، يرجى التواصل مع الدعم.
+        💰 *أبرز طرق الدفع المتوفرة:*\n• زين كاش العراق\n• بنك تركيا وكليك الأردن\n• USDT (العملات الرقمية)\n• فودافون كاش مصر
     );
 });
 
-// تشغيل البوت
 bot.launch()
-    .then(() => console.log("✅ البوت يعمل الآن مع أزرار الواتساب والموقع"))
+    .then(() => console.log("✅ يعمل بنجاح"))
     .catch((err) => console.error("❌ فشل التشغيل: ", err));
 
-// توقف سليم
 process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
