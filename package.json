@@ -7,6 +7,6 @@
     "start": "node Index.js"
   },
   "dependencies": {
-    "node-telegram-bot-api": "^0.61.1"
+    "node-telegram-bot-api": "0.61.1"
   }
 }
