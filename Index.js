@@ -10,20 +10,21 @@ const ADMINS = ['7149506332', '8549868909'];
 // دالة إرسال التنبيهات للإدارة
 const sendToAdmins = (msg) => {
     ADMINS.forEach(id => {
-        bot.telegram.sendMessage(id, msg, { parse_mode: 'Markdown' }).catch(e => console.log("خطأ في التنبيه"));
+        bot.telegram.sendMessage(id, msg, { parse_mode: 'Markdown' }).catch(e => console.log("Admin notify error"));
     });
 };
 
-// تنظيف الـ Webhook عند التشغيل لحل مشكلة الـ Conflict
+// حل مشكلة التضارب وتنظيف الـ Webhook
 bot.telegram.deleteWebhook().then(() => {
 
-    // القائمة الرئيسية (Start)
+    // 1. القائمة الرئيسية (Start)
     bot.start((ctx) => {
         ctx.reply(أهلاً بك في متجر jesee.store 🌟\nالرجاء اختيار القسم المطلوب:, 
             Markup.inlineKeyboard([
                 [Markup.button.callback('🎮 شحن الألعاب', 'games_menu')],
                 [Markup.button.callback('📺 تطبيقات التلفزيون', 'tv_apps')],
                 [Markup.button.callback('💰 سحب رواتب', 'salary_menu')],
+                [Markup.button.callback('📞 الاتصالات', 'telecom_menu')],
                 [Markup.button.callback('🌐 سوشيال ميديا', 'social_menu')],
                 [Markup.button.callback('🪙 العملات الرقمية', 'crypto_menu')],
                 [Markup.button.callback('💻 سوفتوير', 'software_menu'), Markup.button.callback('✨ خدمات متنوعة', 'misc_services')],
@@ -32,7 +33,7 @@ bot.telegram.deleteWebhook().then(() => {
         );
     });
 
-    // --- قسم سحب الرواتب ---
+    // 2. قسم سحب الرواتب
     bot.action('salary_menu', (ctx) => {
         ctx.answerCbQuery();
         ctx.reply("💰 خدمات سحب الرواتب:\nاختر وسيلة التسليم:", Markup.inlineKeyboard([
@@ -43,30 +44,29 @@ bot.telegram.deleteWebhook().then(() => {
         ]));
     });
 
-    // --- معالجة طلبات الخدمات (Prefix: req_) ---
+    // 3. معالجة طلبات الخدمات (Prefix: req_)
     bot.action(/^req_/, (ctx) => {
         const service = ctx.callbackQuery.data.replace('req_', '').replace(/_/g, ' ');
-        sendToAdmins(📥 *طلب جديد مستلم:*\n👤 العميل: ${ctx.from.first_name}\n🆔 ID: \${ctx.from.id}\\n🛠 الخدمة: ${service.toUpperCase()});
+        sendToAdmins(📥 *طلب جديد مستلم:*\n👤 العميل: ${ctx.from.first_name}\n🆔 المعرف: \${ctx.from.id}\\n🛠 الخدمة: ${service.toUpperCase()});
         ctx.answerCbQuery();
-        ctx.reply("✅ تم استلام طلبك بنجاح. سيتواصل معك الدعم قريباً.");
+        ctx.reply("✅ تم استلام طلبك بنجاح. سيتواصل معك فريق الدعم قريباً.");
     });
 
-    // --- العودة للقائمة الرئيسية ---
+    // 4. العودة للقائمة الرئيسية
     bot.action('main_menu', (ctx) => {
         ctx.answerCbQuery();
         ctx.deleteMessage().catch(() => {});
-        // إعادة إظهار القائمة الأساسية
         ctx.reply(قائمة متجر jesee.store الرئيسية:, 
             Markup.inlineKeyboard([
                 [Markup.button.callback('🎮 شحن الألعاب', 'games_menu')],
                 [Markup.button.callback('📺 تطبيقات التلفزيون', 'tv_apps')],
                 [Markup.button.callback('💰 سحب رواتب', 'salary_menu')],
-                [Markup.button.callback('⬅️ عرض كافة الأقسام', 'restart_bot')]
+                [Markup.button.callback('⬅️ عرض الأقسام الأخرى', 'restart_bot')]
             ])
         );
     });
 
-    // زر إعادة التشغيل
+    // 5. زر إعادة التشغيل الشامل
     bot.action('restart_bot', (ctx) => {
         ctx.answerCbQuery();
         ctx.deleteMessage().catch(() => {});
@@ -78,7 +78,7 @@ bot.telegram.deleteWebhook().then(() => {
 
 }).catch(err => console.error("Webhook Error: ", err));
 
-// إنشاء سيرفر بسيط لضمان عمل البوت على Render
+// سيرفر لبقاء البوت حياً على Render وتجنب خطأ الـ Port
 http.createServer((req, res) => {
     res.write('Jesee Store Bot Status: Online');
     res.end();
