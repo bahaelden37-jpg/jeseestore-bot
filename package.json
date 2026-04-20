@@ -1,11 +1,12 @@
 {
-  "name": "jeseestore-bot",
+  "name": "jesee-store-bot",
   "version": "1.0.0",
+  "description": "",
   "main": "Index.js",
   "scripts": {
     "start": "node Index.js"
   },
   "dependencies": {
-    "node-telegram-bot-api": "latest"
+    "telegraf": "^4.16.3"
   }
 }
