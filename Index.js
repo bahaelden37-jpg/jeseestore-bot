@@ -7,7 +7,7 @@ const bot = new TelegramBot(token, {
   polling: true
 });
 
-// رقم الواتساب الأساسي للتواصل
+// رقم الواتساب الأساسي
 const whatsappNumber = "905342572605";
 
 bot.onText(/\/start/, (msg) => {
@@ -30,35 +30,31 @@ bot.onText(/\/start/, (msg) => {
   bot.sendMessage(chatId, welcomeMessage, options);
 });
 
-// معالجة الضغط على الأزرار
 bot.on('callback_query', (query) => {
   const chatId = query.message.chat.id;
   const data = query.data;
 
   if (data === 'payment_list') {
     const paymentText = 💰 **قائمة طرق الدفع وسحب الرواتب:**\n\n +
-                        🇮🇶 **العراق:** زين كاش (تواصل مع الإدارة 05342572606)\n +
-                        🇯🇴 **الأردن:** كليك بنك، أورانج مني\n +
-                        🇸🇾 **سوريا:** شام كاش (ليرة ودولار)، قسم الحوالات (Muhammed Allavi)\n +
-             تركيا: 🇹🇷 **تركيا:** بنك تركيا (Zekeriya Alvi)، وش مني\n +
-             مصر:   🇪🇬 **مصر:** فودافون كاش\n +
-             فلسطين:🇵🇸 **فلسطين:** بنك فلسطين\n +
-             المغرب:🇲🇦 **المغرب:** بنك المغرب (Soumia Aissaoui)\n +
-             عمان:  🇴🇲 **عمان:** بنك مسقط (Ahli Islamic Bank)\n +
-                        🇩🇿 **الجزائر:** متوفر التواصل مع الدعم\n\n +
-                        🌐 **العملات الرقمية:** USDT (TRC20 / BEP20)\n +
-                        📲 **سحب رواتب التطبيقات:** (سول ستار، بوتا لايف، زينا لايف، ياهو شات، جونكو)\n\n +
-                        📞 للاستفسار عن أي وسيلة أخرى أو طلب تفاصيل الحسابات، تواصل معنا مباشرة.;
+                        🇮🇶 العراق: زين كاش (إدارة: 05342572606)\n +
+                        🇯🇴 الأردن: كليك بنك، أورانج مني\n +
+                        🇸🇾 سوريا: شام كاش، حوالات (Muhammed Allavi)\n +
+                        🇹🇷 تركيا: بنك تركيا (Zekeriya Alvi)، وش مني\n +
+                        🇪🇬 مصر: فودافون كاش\n +
+                        🇲🇦 المغرب: بنك المغرب (Soumia Aissaoui)\n +
+                        🇴🇲 عمان: بنك مسقط (Ahli Islamic)\n\n +
+                        🌐 عملات رقمية: USDT (TRC20 / BEP20)\n +
+                        📲 سحب رواتب: سول ستار، بوتا، زينا، ياهو، جونكو.\n\n +
+                        📞 للتفاصيل، تواصل معنا عبر الواتساب.;
 
     bot.sendMessage(chatId, paymentText, { parse_mode: 'Markdown' });
   }
 
   if (data === 'send_location') {
-    // إحداثيات الموقع
     bot.sendLocation(chatId, 33.5138, 36.2765);
   }
 
   bot.answerCallbackQuery(query.id);
 });
 
-console.log("الخدمة تعمل الآن بنجاح لخدمة الوطن العربي...");
+console.log("البوت يعمل الآن بنجاح...");
