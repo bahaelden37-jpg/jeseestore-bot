@@ -1,20 +1,9 @@
-const { Telegraf } = require('telegraf');
-const express = require('express');
-
-const bot = new Telegraf('8692737754:AAGW7-qFJSSKDR87K2n52InE6pRWLXjEulM');
-const app = express();
-
-// رد البوت الأساسي
-bot.start((ctx) => ctx.reply('مرحباً بك في بوت الجيسي ستور 💎\nالمتجر متصل الآن عبر Render!'));
-bot.hears('الأسعار', (ctx) => ctx.reply('قائمة أسعار الشحن متوفرة الآن في الموقع..'));
-
-// إعداد الـ Webhook ليعمل مع Render
-const PORT = process.env.PORT || 3000;
-const URL = process.env.RENDER_EXTERNAL_URL; // Render سيعطيك هذا الرابط تلقائياً
-
-app.use(bot.webhookCallback('/secret-path'));
-
-app.listen(PORT, async () => {
-  await bot.telegram.setWebhook(${URL}/secret-path);
-  console.log(Bot is running on port ${PORT});
-});
+{
+  "name": "jesee-store-bot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "telegraf": "^4.12.0",
+    "express": "^4.18.2"
+  }
+}
