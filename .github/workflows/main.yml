@@ -13,3 +13,5 @@ jobs:
         with:
           app-name: "Jesee Store"
           url: "https://jesee.store/"
+          # أزرار الوصول السريع داخل التطبيق
+          menu-links: "[{'title': 'فتح متجر التيليجرام', 'url': 'https://t.me/jeseestorebot'}, {'title': 'دعم فني (1)', 'url': 'https://wa.me/963983731830'}, {'title': 'دعم فني (2)', 'url': 'https://wa.me/963993777353'}]"
