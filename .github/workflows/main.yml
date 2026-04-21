@@ -1,17 +1,14 @@
-name: Build Jesee Store APK
+name: Build Jesee Store Final
 on: [push, workflow_dispatch]
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-
+      - uses: actions/checkout@v3
       - name: Webview to APK
         uses: swayangjit/webview-to-app-action@v1.1
         with:
           app-name: "Jesee Store"
           url: "https://jesee.store/"
-          # أزرار الوصول السريع داخل التطبيق
+          # هنا أضفنا الروابط التي طلبتها لتظهر في القائمة الجانبية للتطبيق
           menu-links: "[{'title': 'فتح متجر التيليجرام', 'url': 'https://t.me/jeseestorebot'}, {'title': 'دعم فني (1)', 'url': 'https://wa.me/963983731830'}, {'title': 'دعم فني (2)', 'url': 'https://wa.me/963993777353'}]"
